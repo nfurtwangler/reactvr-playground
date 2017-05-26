@@ -24,12 +24,14 @@
         width: 100%;
         height: 100%;
       }
+      #enter_vr {
+        width: 200px;
+        height: 200px;
+        background-color: black;
+        color: white;
+      }
     </style>
     <script>
-      navigator.geolocation.getCurrentPosition(function(position) {
-        console.log("GOT GEOLOC POSISH:  " + position.coords.latitude + ", " + position.coords.longitude);
-      });
-    
       var vrDisplay;      // The VRDisplay we will present to, discovered from getVRDisplays
       var frameData;      // HMD information, populated each frame by getFrameData
       var layerSource;    // The source of the VRLayer passed to requestPresent, our canvas element.
@@ -44,6 +46,9 @@
 
       // This is the entrypoint to this sample and where we attempt to begin VR presentation
       function requestPresent() {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          console.log("GOT GEOLOC POSISH:  " + position.coords.latitude + ", " + position.coords.longitude);
+        });
         // First, initialize our WebGL program for rendering a simple quad
         initWebGLProgram();
 
@@ -69,6 +74,9 @@
               // This can normally only be called in response to a user gesture.
               // In Carmel, we can begin presenting the VR scene right away.
               vrDisplay.requestPresent([{ source: layerSource }]).then(function () {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                  console.log("GOT GEOLOC POSISH:  " + position.coords.latitude + ", " + position.coords.longitude);
+                });
                 // Start our render loop, which is synchronized with the VRDisplay refresh rate
                 vrDisplay.requestAnimationFrame(onAnimationFrame);
               }).catch(function (err) {
@@ -267,7 +275,8 @@
       }
     </script>
   </head>
-  <body onload="requestPresent()">
+  <body>
+    <div id="enter_vr" onclick="requestPresent()">Enter VR</div>
     <canvas id="webgl-canvas"></canvas>
     <div id="messages"></div>
   </body>
