@@ -26,6 +26,10 @@
       }
     </style>
     <script>
+      navigator.geolocation.getCurrentPosition(function(position) {
+        console.log("GOT GEOLOC POSISH:  " + position.coords.latitude + ", " + position.coords.longitude);
+      });
+    
       var vrDisplay;      // The VRDisplay we will present to, discovered from getVRDisplays
       var frameData;      // HMD information, populated each frame by getFrameData
       var layerSource;    // The source of the VRLayer passed to requestPresent, our canvas element.
@@ -253,7 +257,7 @@
         }, false);
 
         // Start loading the image
-        image.src = "../assets/cube-sea.png";
+        image.src = "./static_assets/cube-sea.png";
       }
 
       function addHTMLMessage(msgText) {
