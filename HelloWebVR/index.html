@@ -46,9 +46,6 @@
 
       // This is the entrypoint to this sample and where we attempt to begin VR presentation
       function requestPresent() {
-        navigator.geolocation.getCurrentPosition(function(position) {
-          console.log("GOT GEOLOC POSISH:  " + position.coords.latitude + ", " + position.coords.longitude);
-        });
         // First, initialize our WebGL program for rendering a simple quad
         initWebGLProgram();
 
