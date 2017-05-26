@@ -45,7 +45,7 @@
       var quadModelMat;   // The quad's model matrix which we will animate
 
       // This is the entrypoint to this sample and where we attempt to begin VR presentation
-      function requestPresent() {
+      function prepareRequestPresent() {
         // First, initialize our WebGL program for rendering a simple quad
         initWebGLProgram();
 
@@ -68,19 +68,19 @@
               layerSource.width = Math.max(leftEye.renderWidth, rightEye.renderWidth) * 2;
               layerSource.height = Math.max(leftEye.renderHeight, rightEye.renderHeight);
 
-              // This can normally only be called in response to a user gesture.
-              // In Carmel, we can begin presenting the VR scene right away.
-              vrDisplay.requestPresent([{ source: layerSource }]).then(function () {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                  console.log("GOT GEOLOC POSISH:  " + position.coords.latitude + ", " + position.coords.longitude);
+              document.getElementById("enter_vr").addEventListener("click", function () {
+                vrDisplay.requestPresent([{ source: layerSource }]).then(function () {
+                  navigator.geolocation.getCurrentPosition(function(position) {
+                    console.log("GOT GEOLOC POSISH:  " + position.coords.latitude + ", " + position.coords.longitude);
+                  });
+                  // Start our render loop, which is synchronized with the VRDisplay refresh rate
+                  vrDisplay.requestAnimationFrame(onAnimationFrame);
+                }).catch(function (err) {
+                  // The Carmel Developer preview allows entry into VR at any time because it is a VR first experience.
+                  // Other browsers will only allow this to succeed if called in response to user interaction, such as a click or tap though.
+                  // We expect this to fail outside of Carmel and would present the user with an "Enter VR" button of some sort instead.
+                  addHTMLMessage("Failed to requestPresent.");
                 });
-                // Start our render loop, which is synchronized with the VRDisplay refresh rate
-                vrDisplay.requestAnimationFrame(onAnimationFrame);
-              }).catch(function (err) {
-                // The Carmel Developer preview allows entry into VR at any time because it is a VR first experience.
-                // Other browsers will only allow this to succeed if called in response to user interaction, such as a click or tap though.
-                // We expect this to fail outside of Carmel and would present the user with an "Enter VR" button of some sort instead.
-                addHTMLMessage("Failed to requestPresent.");
               });
             } else {
               // Usually you would want to hook the vrdisplayconnect event and only try to request present then.
@@ -272,8 +272,8 @@
       }
     </script>
   </head>
-  <body>
-    <div id="enter_vr" onclick="requestPresent()">Enter VR</div>
+  <body onload="prepareRequestPresent()">
+    <div id="enter_vr">Enter VR</div>
     <canvas id="webgl-canvas"></canvas>
     <div id="messages"></div>
   </body>
